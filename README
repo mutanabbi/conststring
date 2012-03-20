@@ -1,0 +1,1 @@
+This is a form of http://sourceforge.net/projects/conststring project to aoid some perfomance looses at operator<< to stream and some other changes
