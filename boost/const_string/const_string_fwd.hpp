@@ -3,8 +3,8 @@
 
 // Copyright (c) 2004 Maxim Yegorushkin
 //
-// Use, modification and distribution are subject to the 
-// Boost Software License, Version 1.0. (See accompanying file 
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_CONST_STRING_CONST_STRING_FWD_HPP

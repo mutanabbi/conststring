@@ -3,8 +3,8 @@
 
 // Copyright (c) 2004 Maxim Yegorushkin
 //
-// Use, modification and distribution are subject to the 
-// Boost Software License, Version 1.0. (See accompanying file 
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_CONST_STRING_FORMAT_HPP
@@ -62,28 +62,28 @@ inline ConstStringT cs_format_va(size_t hint, CharT const* fmt, va_list args)
     typedef typename string::char_type char_type;
     typedef typename string::storage_type storage_type;
 
-    if(!hint)
+    if (!hint)
         hint = string::traits_type::length(fmt);
     ++hint; // include the trailing zero
 
     // first take - try not to allocate any memory
     enum { buffers_chars = storage_type::effective_buffer_size_chars };
-    if(buffers_chars && hint <= buffers_chars)
+    if (buffers_chars && hint <= buffers_chars)
     {
         storage_type stg(0, buffers_chars - 1);
         int const r(cs::aux::do_format(const_cast<char_type*>(stg.begin()), buffers_chars, fmt, args));
-        if(size_t(r) < buffers_chars)
+        if (size_t(r) < buffers_chars)
             return string(stg.set_size(r));
         else
             hint = 2 * buffers_chars;
     }
 
     // grow buffer till it fits
-    for(; true; hint *= 2)
+    for (; true; hint *= 2)
     {
         storage_type stg(0, hint - 1);
         int const r(cs::aux::do_format(const_cast<char_type*>(stg.begin()), hint, fmt, args));
-        if(size_t(r) < hint)
+        if (size_t(r) < hint)
             return string(stg.set_size(r));
     }
     // never get here

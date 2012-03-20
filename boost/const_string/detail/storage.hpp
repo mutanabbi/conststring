@@ -3,8 +3,8 @@
 
 // Copyright (c) 2004 Maxim Yegorushkin
 //
-// Use, modification and distribution are subject to the 
-// Boost Software License, Version 1.0. (See accompanying file 
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_CONST_STRING_DETAIL_STORAGE_HPP
@@ -34,7 +34,7 @@ namespace aux {
 // perhaps might not be aligned properly for char_type (or to whatever
 // buffer_alignment specifies).  Let me apply the James Kanze
 // test [*]: is it safe to create a const_string<double> on a SPARC?
-//  
+//
 // [*] See <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=8670> if you
 //     don't know what I'm talking about.
 //
@@ -47,7 +47,7 @@ struct aligned_union
     {
         typename boost::type_with_alignment<
               (boost::alignment_of<T>::value > boost::alignment_of<U>::value)
-            ? boost::alignment_of<T>::value 
+            ? boost::alignment_of<T>::value
             : boost::alignment_of<U>::value
             >::type a;
         char b[sizeof(T)];
@@ -75,7 +75,7 @@ template<
     , size_t buffer_size
     , size_t buffer_alignment
     >
-class const_string_storage 
+class const_string_storage
     : private AllocatorT::template rebind<
           typename cs::aux::aligned_union<boost::detail::atomic_count, typename TraitsT::char_type>::type
       >::other
@@ -111,7 +111,7 @@ public:
 public:
     const_string_storage(char_type const* begin, size_t length, int /*reference_semantics*/)
     {
-        if(length > this->max_size())
+        if (length > this->max_size())
             throw std::length_error("const_string: the source string is way too long");
 
         state_ = length | shared_bit_mask;
@@ -120,7 +120,7 @@ public:
 
     const_string_storage(char_type const* begin, size_t length)
     {
-        if(length > this->max_size())
+        if (length > this->max_size())
             throw std::length_error("const_string: the source string is way too long");
 
         state_ = length
@@ -130,17 +130,17 @@ public:
 
         char_type* copy;
 
-        if(this->is_shared())
+        if (this->is_shared())
         {
             size_t const character_bytes((length + 1) * sizeof(char_type));
             size_t const elements(
                   1
-                + character_bytes / sizeof(typename allocator::value_type) 
+                + character_bytes / sizeof(typename allocator::value_type)
                 + (0 != character_bytes % sizeof(typename allocator::value_type))
                 );
 
             void* const p(this->allocator::allocate(elements));
-			new (p) boost::detail::atomic_count(1);
+            new (p) boost::detail::atomic_count(1);
             copy = reinterpret_cast<char_type*>(reinterpret_cast<size_t>(p) + sizeof(typename allocator::value_type));
             *this->as_shared() = copy;
         }
@@ -149,7 +149,7 @@ public:
             copy = this->as_buffer();
         }
 
-        if(begin)
+        if (begin)
             TraitsT::copy(copy, begin, length);
 
         copy[length] = char_type();
@@ -159,10 +159,10 @@ public:
         : allocator(other)
         , state_(other.state_)
     {
-        if(this->is_shared())
+        if (this->is_shared())
         {
             *this->as_shared() = *other.as_shared();
-            if(this->is_allocated())
+            if (this->is_allocated())
                 ++this->counter();
         }
         else
@@ -171,7 +171,7 @@ public:
 
     const_string_storage const& operator=(const_string_storage const& other) // throw()
     {
-        if(this != &other)
+        if (this != &other)
         {
             this->allocator::operator=(other);
             this->reset();
@@ -188,7 +188,7 @@ public:
 public:
     const_string_storage& set_size(size_t length)
     {
-        if(length > this->size())
+        if (length > this->size())
             throw std::length_error("const_string: the source string is way too long");
         state_ = state_ & (allocated_bit_mask | shared_bit_mask) | length;
         return *this;
@@ -221,24 +221,24 @@ public:
 private:
     void reset()
     {
-        if((allocated_bit_mask | shared_bit_mask) == (state_ & (allocated_bit_mask | shared_bit_mask)))
+        if ((allocated_bit_mask | shared_bit_mask) == (state_ & (allocated_bit_mask | shared_bit_mask)))
         {
-            if(0 == --this->counter())
-			{
+            if (0 == --this->counter())
+            {
                 size_t const character_bytes((this->size() + 1) * sizeof(char_type));
                 size_t const elements(
                       1
-                    + character_bytes / sizeof(typename allocator::value_type) 
+                    + character_bytes / sizeof(typename allocator::value_type)
                     + (0 != character_bytes % sizeof(typename allocator::value_type))
                     );
 
-				boost::detail::atomic_count* const p(&this->counter());
-				// g++ 3.2.3 needs it for the next line when atomic_count is long int
-				using boost::detail::atomic_count; 
-				p->~atomic_count();
+                boost::detail::atomic_count* const p(&this->counter());
+                // g++ 3.2.3 needs it for the next line when atomic_count is long int
+                using boost::detail::atomic_count;
+                p->~atomic_count();
 
                 this->allocator::deallocate(reinterpret_cast<typename allocator::pointer>(p), elements);
-			}
+            }
         }
         state_ = 0;
         *this->as_shared() = 0;
@@ -256,12 +256,12 @@ private:
 
     char_type* as_buffer() const
     {
-        return static_cast<char_type*>(const_cast<aligned_storage&>(stg_).address()); 
+        return static_cast<char_type*>(const_cast<aligned_storage&>(stg_).address());
     }
 
     char_type const** as_shared() const
     {
-        return static_cast<char_type const**>(const_cast<aligned_storage&>(stg_).address()); 
+        return static_cast<char_type const**>(const_cast<aligned_storage&>(stg_).address());
     }
 
     boost::detail::atomic_count& counter()

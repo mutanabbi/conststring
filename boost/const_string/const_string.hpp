@@ -3,8 +3,8 @@
 
 // Copyright (c) 2004 Maxim Yegorushkin
 //
-// Use, modification and distribution are subject to the 
-// Boost Software License, Version 1.0. (See accompanying file 
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_CONST_STRING_CONST_STRING_HPP
@@ -47,7 +47,7 @@ template<class T>
 inline
 typename T::const_pointer checked_data(T const& t, typename T::size_type pos)
 {
-    if(pos > t.size())
+    if (pos > t.size())
         throw std::out_of_range("const_string");
     else
         return pos + t.data();
@@ -58,7 +58,7 @@ inline
 typename T::size_type checked_size(T const& t, typename T::size_type pos, typename T::size_type n)
 {
     typename T::size_type const size(t.size());
-    if(pos > size)
+    if (pos > size)
         throw std::out_of_range("const_string");
     else
         return std::min(n, size - pos);
@@ -95,8 +95,8 @@ public:
 
     typedef char_type const* iterator;
     typedef char_type const* const_iterator;
-	typedef std::reverse_iterator<const_iterator> reverse_iterator;
-	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+    typedef std::reverse_iterator<const_iterator> reverse_iterator;
+    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
     static size_t const npos = static_cast<size_t>(-1);
 
@@ -137,15 +137,15 @@ public: // const_string arg
 
     const_string& operator=(const_string const& str) // throw()
     {
-		this->storage_type::operator=(str);
-		return *this;
-	}
+        this->storage_type::operator=(str);
+        return *this;
+    }
 
-	const_string& operator=(boost::reference_wrapper<const_string const> const& str) // throw()
+    const_string& operator=(boost::reference_wrapper<const_string const> const& str) // throw()
     {
-		this->storage_type::operator=(str.get());
-		return *this;
-	}
+        this->storage_type::operator=(str.get());
+        return *this;
+    }
 
 public: // std::basic_string<> arg
     const_string(std_string_type const& str, size_t pos = 0, size_t n = npos) // throw(std::bad_alloc, std::out_of_range, std::length_error)
@@ -197,7 +197,7 @@ public: // char_type* arg
     const_string(boost::reference_wrapper<char_type const* const> begin, char_type const* end) // throw(std::length_error)
         : storage_type(
               begin.get()
-			, end - begin.get()
+            , end - begin.get()
             , reference_semantics
         )
     {}
@@ -205,7 +205,7 @@ public: // char_type* arg
     const_string(boost::reference_wrapper<char_type* const> begin, char_type const* end) // throw(std::length_error)
         : storage_type(
               begin.get()
-			, end - begin.get()
+            , end - begin.get()
             , reference_semantics
         )
     {}
@@ -254,7 +254,7 @@ public:
     const_reverse_iterator rbegin() const { return reverse_iterator(this->end()); } // throw()
     const_reverse_iterator rend() const { return reverse_iterator(this->begin()); } // throw()
 
-    size_t max_size() const { return this->storage_type::max_size(); } // throw() 
+    size_t max_size() const { return this->storage_type::max_size(); } // throw()
     size_t size() const { return this->storage_type::size(); } // throw()
     size_t length() const { return this->storage_type::size(); } // throw()
     bool empty() const { return 0 == this->storage_type::size(); } // throw()
@@ -269,7 +269,7 @@ public:
 
     char_type at(size_t index) const // throw(std::out_of_range)
     {
-        if(index < this->size())
+        if (index < this->size())
             return (*this)[index];
         else
             throw std::out_of_range("invalid index");
@@ -284,7 +284,7 @@ public:
     {
         // this condition yields true if this string was obtained via ref_substr()
         // and thus may not have the trailing zero
-        if(char_type() != *this->end())
+        if (char_type() != *this->end())
             const_cast<const_string&>(*this) = const_string(this->begin(), this->end());
         return this->begin();
     }
@@ -293,7 +293,7 @@ public:
     {
         size_t const size(this->size());
 
-        if(pos > size)
+        if (pos > size)
             throw std::out_of_range("copy");
 
         n = std::min(n, size - pos);
@@ -329,7 +329,7 @@ public:
         *this = other;
         other = t;
     }
-    
+
 public:
     // append(), push_back() and operator+=() are inefficient
     // provided for drop in compatibility with std::basic_string<> only
@@ -474,11 +474,11 @@ public: // find
         if (str_size <= this_size)
         {
             pos = std::min(this_size - str_size, pos);
-            do 
+            do
             {
                 if (!traits_type::compare(this_data + pos, str_data, str_size))
                     return pos;
-            } 
+            }
             while (pos-- > 0);
         }
         return npos;
@@ -489,7 +489,7 @@ public: // find
         size_t const size(this->size());
         for (; n && pos < size; ++pos)
         {
-            if(traits_type::find(s, n, (*this)[pos]))
+            if (traits_type::find(s, n, (*this)[pos]))
                 return pos;
         }
         return npos;
@@ -498,16 +498,16 @@ public: // find
     size_t find_last_of(char_type const* s, size_type pos, size_type n) const // throw()
     {
         size_type size(this->size());
-        if(size && n)
-        { 
-            if(--size > pos) 
+        if (size && n)
+        {
+            if (--size > pos)
                 size = pos;
             do
             {
-                if(traits_type::find(s, n, (*this)[size]))
+                if (traits_type::find(s, n, (*this)[size]))
                     return size;
-            } 
-            while(size-- != 0);
+            }
+            while (size-- != 0);
         }
         return npos;
     }
@@ -515,8 +515,8 @@ public: // find
     size_t find_first_not_of(char_type const* s, size_type pos, size_type n) const // throw()
     {
         size_t const size(this->size());
-        for(size_t xpos(pos); xpos < size; ++xpos)
-            if(!traits_type::find(s, n, (*this)[xpos]))
+        for (size_t xpos(pos); xpos < size; ++xpos)
+            if (!traits_type::find(s, n, (*this)[xpos]))
                 return xpos;
         return npos;
     }
@@ -524,8 +524,8 @@ public: // find
     size_t find_first_not_of(char_type c, size_type pos = npos) const // throw()
     {
         size_t const size(this->size());
-        for(size_t xpos(pos); xpos < size; ++xpos)
-            if(!traits_type::eq((*this)[xpos], c))
+        for (size_t xpos(pos); xpos < size; ++xpos)
+            if (!traits_type::eq((*this)[xpos], c))
                 return xpos;
         return npos;
     }
@@ -533,16 +533,16 @@ public: // find
     size_t find_last_not_of(char_type const* s, size_type pos, size_type n) const // throw()
     {
         size_t size(this->size());
-        if(size)
-        { 
-            if(--size > pos) 
+        if (size)
+        {
+            if (--size > pos)
                 size = pos;
             do
             {
-                if(!traits_type::find(s, n, (*this)[size]))
+                if (!traits_type::find(s, n, (*this)[size]))
                     return size;
-            } 
-            while(size--);
+            }
+            while (size--);
         }
         return npos;
     }
@@ -550,16 +550,16 @@ public: // find
     size_t find_last_not_of(char_type c, size_type pos = npos) const // throw()
     {
         size_t size(this->size());
-        if(size)
-        { 
-            if(--size > pos) 
+        if (size)
+        {
+            if (--size > pos)
                 size = pos;
             do
             {
-                if(!traits_type::eq((*this)[size], c))
+                if (!traits_type::eq((*this)[size], c))
                     return size;
-            } 
-            while(size--);
+            }
+            while (size--);
         }
         return npos;
     }
@@ -759,7 +759,7 @@ CONST_STRING_DEFINE_COMPARISONS
 #undef CONST_STRING_CMP_ARG
 #undef CONST_STRING_CMP_TMPL_AGRS
 
-#define CONST_STRING_CMP_TMPL_AGRS 
+#define CONST_STRING_CMP_TMPL_AGRS
 #define CONST_STRING_CMP_ARG T1 const*
 CONST_STRING_DEFINE_COMPARISONS
 #undef CONST_STRING_CMP_ARG

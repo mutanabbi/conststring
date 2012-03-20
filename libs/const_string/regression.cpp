@@ -1,7 +1,7 @@
 // Copyright (c) 2004 Maxim Yegorushkin
 //
-// Use, modification and distribution are subject to the 
-// Boost Software License, Version 1.0. (See accompanying file 
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma warning(disable: 4786)
@@ -30,7 +30,7 @@ template<class CharT>
 std::basic_string<CharT> gen_str(size_t n)
 {
     std::basic_string<CharT> r(n, CharT());
-    while(n--)
+    while (n--)
         r[n] = 'a' + std::rand() % 25;
     return r;
 }
@@ -75,7 +75,7 @@ void do_test_comparison()
     typedef std::basic_string<CharT> std_string;
     using boost::cref;
     using boost::lit;
-    
+
     CharT const(&empty)[1] = literals<CharT>::empty_string;
     CharT const(&some_string)[37] = literals<CharT>::some_string;
 
@@ -170,7 +170,7 @@ void do_test_comparison()
     }
 
     { // construction
-    for(size_t n(128); n; --n)
+    for (size_t n(128); n; --n)
     {
         std_string const ss1(gen_str<CharT>(n));
 
@@ -239,7 +239,7 @@ void do_test_basic_usage()
     std::multiset<std_string> original;
     std::vector<const_string> pretender_copy;
     std::vector<const_string> pretender_ref;
-    for(size_t n(N); n--;)
+    for (size_t n(N); n--;)
     {
         typename std::multiset<std_string>::const_iterator const i(original.insert(gen_str<CharT>(rand() % 256)));
         pretender_copy.push_back(*i);
@@ -252,7 +252,7 @@ void do_test_basic_usage()
     {
         static void shuffle(std::vector<const_string>& v)
         {
-            for(size_t n(N * M); n--;)
+            for (size_t n(N * M); n--;)
             {
                 size_t i1(std::rand() % (N - 1));
                 size_t i2(std::rand() % (N - 1));
@@ -274,7 +274,7 @@ void do_test_basic_usage()
 
     typename std::vector<const_string>::const_iterator i1(pretender_copy.begin());
     typename std::vector<const_string>::const_iterator i2(pretender_ref.begin());
-    for(typename std::multiset<std_string>::const_iterator i(original.begin()), e(original.end()); i != e; ++i, ++i1, ++i2)
+    for (typename std::multiset<std_string>::const_iterator i(original.begin()), e(original.end()); i != e; ++i, ++i1, ++i2)
     {
         BOOST_CHECK(*i == *i1);
         BOOST_CHECK(*i == *i2);
@@ -317,7 +317,7 @@ void do_test_concatenation()
     a2 += p6;
     a2 += s7;
     a2 += p8;
-    
+
     const_string b2;
     b2 += s1;
     b2 += p2;
@@ -327,7 +327,7 @@ void do_test_concatenation()
     b2 += p6;
     b2 += s7;
     b2 += p8;
-    
+
     BOOST_CHECK(a2 == b2);
 
     a2 += a2 + a2;
@@ -363,7 +363,7 @@ void do_test_io()
 
     // io quick and dirty test
     typedef std::basic_stringstream<CharT> stream;
-    
+
     stream s;
 
     const_string a(gen_str<CharT>(0x40));
