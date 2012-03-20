@@ -26,7 +26,10 @@ std::basic_ostream<char_type, traits_type>& operator<<(
     , basic_const_string<char_type, traits_type, T3> const& s
     )
 {
-    return o << std::basic_string<char_type, traits_type>(s.data(), s.size());
+    if (o.rdbuf()->sputn(s.data(), s.size()) != static_cast<std::streamsize>(s.size()))
+        o.setstate(std::ios_base::badbit);
+
+    return o;
 }
 
 template<class char_type, class traits_type, class T3>
