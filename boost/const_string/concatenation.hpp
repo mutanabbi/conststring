@@ -111,13 +111,13 @@ template<
     >
 inline
 typename cs::aux::expression_result<
-      const_string<T1, T2, T3>
-    , const_string<T1, T2, T3>
-    , const_string<T1, T2, T3>
+      basic_const_string<T1, T2, T3>
+    , basic_const_string<T1, T2, T3>
+    , basic_const_string<T1, T2, T3>
     >::type
-operator+(const_string<T1, T2, T3> const& a, const_string<T1, T2, T3> const& b) // throw()
+operator+(basic_const_string<T1, T2, T3> const& a, basic_const_string<T1, T2, T3> const& b) // throw()
 {
-    typedef const_string<T1, T2, T3> StringT;
+    typedef basic_const_string<T1, T2, T3> StringT;
     typedef typename cs::aux::expression_result<StringT, StringT, StringT>::type type;
     typedef cs::aux::wrap_expression_arg<StringT> wrap_t;
     return type(wrap_t::wrap(a), wrap_t::wrap(b));
@@ -131,13 +131,13 @@ template<
     >
 inline
 typename cs::aux::expression_result<
-      const_string<T1, T2, T3>
-    , const_string<T1, T2, T3>
+      basic_const_string<T1, T2, T3>
+    , basic_const_string<T1, T2, T3>
     , U
     >::type
-operator+(const_string<T1, T2, T3> const& a, U const& b) // throw()
+operator+(basic_const_string<T1, T2, T3> const& a, U const& b) // throw()
 {
-    typedef const_string<T1, T2, T3> StringT;
+    typedef basic_const_string<T1, T2, T3> StringT;
     typedef typename cs::aux::expression_result<StringT, StringT, U>::type type;
     typedef cs::aux::wrap_expression_arg<StringT> wrap_t;
     return type(wrap_t::wrap(a), wrap_t::wrap(b));
@@ -151,13 +151,13 @@ template<
     >
 inline
 typename cs::aux::expression_result<
-      const_string<T1, T2, T3>
+      basic_const_string<T1, T2, T3>
     , U
-    , const_string<T1, T2, T3>
+    , basic_const_string<T1, T2, T3>
     >::type
-operator+(U const& a, const_string<T1, T2, T3> const& b) // throw()
+operator+(U const& a, basic_const_string<T1, T2, T3> const& b) // throw()
 {
-    typedef const_string<T1, T2, T3> StringT;
+    typedef basic_const_string<T1, T2, T3> StringT;
     typedef typename cs::aux::expression_result<StringT, U, StringT>::type type;
     typedef cs::aux::wrap_expression_arg<StringT> wrap_t;
     return type(wrap_t::wrap(a), wrap_t::wrap(b));
@@ -173,16 +173,16 @@ template<
     >
 inline
 typename boost::lazy_disable_if<
-      boost::is_same<const_string<T1, T2, T3>, U>
+      boost::is_same<basic_const_string<T1, T2, T3>, U>
     , typename cs::aux::expression_result<
-          const_string<T1, T2, T3>
-        , concatenation<const_string<T1, T2, T3>, V1, V2>
+          basic_const_string<T1, T2, T3>
+        , concatenation<basic_const_string<T1, T2, T3>, V1, V2>
         , U
         >
     >::type
-operator+(concatenation<const_string<T1, T2, T3>, V1, V2> const& a, U const& b) // throw()
+operator+(concatenation<basic_const_string<T1, T2, T3>, V1, V2> const& a, U const& b) // throw()
 {
-    typedef const_string<T1, T2, T3> StringT;
+    typedef basic_const_string<T1, T2, T3> StringT;
     typedef typename cs::aux::expression_result<
           StringT
         , concatenation<StringT, V1, V2>
@@ -202,16 +202,16 @@ template<
     >
 inline
 typename boost::lazy_disable_if<
-      boost::is_same<const_string<T1, T2, T3>, U>
+      boost::is_same<basic_const_string<T1, T2, T3>, U>
     , typename cs::aux::expression_result<
-          const_string<T1, T2, T3>
+          basic_const_string<T1, T2, T3>
         , U
-        , concatenation<const_string<T1, T2, T3>, V1, V2>
+        , concatenation<basic_const_string<T1, T2, T3>, V1, V2>
         >
     >::type
-operator+(U const& a, concatenation<const_string<T1, T2, T3>, V1, V2> const& b) // throw()
+operator+(U const& a, concatenation<basic_const_string<T1, T2, T3>, V1, V2> const& b) // throw()
 {
-    typedef const_string<T1, T2, T3> StringT;
+    typedef basic_const_string<T1, T2, T3> StringT;
     typedef typename cs::aux::expression_result<
           StringT
         , U
@@ -235,7 +235,7 @@ template<
 inline
 void copy_result_to(
       char_type* to
-    , boost::const_string<char_type, traits_type, S> const& from
+    , boost::basic_const_string<char_type, traits_type, S> const& from
     )
 {
     traits_type::copy(to, from.data(), from.size());
@@ -251,7 +251,7 @@ template<
 inline
 void copy_result_to(
       char_type* to
-    , boost::concatenation<boost::const_string<char_type, traits_type, storage_t>, V1, V2> const& from
+    , boost::concatenation<boost::basic_const_string<char_type, traits_type, storage_t>, V1, V2> const& from
     )
 {
     from.copy_result_to(to);

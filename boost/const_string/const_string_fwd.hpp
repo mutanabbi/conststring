@@ -29,10 +29,13 @@ template<
     , class TraitsT = std::char_traits<CharT>
     , class StorageT = const_string_storage<TraitsT>
     >
-class const_string;
+class basic_const_string;
 
 template<class CharT, class LeftT, class RightT>
 class concatenation;
+
+typedef class basic_const_string<char> const_string;
+typedef class basic_const_string<wchar_t> const_wstring;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

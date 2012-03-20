@@ -12,7 +12,7 @@
 
 #define BOOST_AUTO_TEST_MAIN
 #include "boost/test/auto_unit_test.hpp"
-//#include "boost/test/included/unit_test_framework.hpp"
+#include "boost/test/included/unit_test_framework.hpp"
 
 #pragma warning(pop)
 
@@ -381,22 +381,22 @@ void do_test_io()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-template class boost::const_string<char>;
-template class boost::const_string<wchar_t>;
+template class boost::basic_const_string<char>;
+template class boost::basic_const_string<wchar_t>;
 
 template<class CharT>
 void do_unit_test()
 {
-    do_test_comparison<boost::const_string<CharT> >();
-    do_test_basic_usage<boost::const_string<CharT> >();
-    do_test_concatenation<boost::const_string<CharT> >();
-    do_test_format<boost::const_string<CharT> >();
-    do_test_io<boost::const_string<CharT> >();
+    do_test_comparison<boost::basic_const_string<CharT> >();
+    do_test_basic_usage<boost::basic_const_string<CharT> >();
+    do_test_concatenation<boost::basic_const_string<CharT> >();
+    do_test_format<boost::basic_const_string<CharT> >();
+    do_test_io<boost::basic_const_string<CharT> >();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOST_AUTO_UNIT_TEST(constant_string_regression_char)
+BOOST_AUTO_TEST_CASE(constant_string_regression_char)
 {
     std::srand(0);
     do_unit_test<char>();
@@ -404,7 +404,7 @@ BOOST_AUTO_UNIT_TEST(constant_string_regression_char)
 
 #ifndef BOOST_NO_CWCHAR
 
-BOOST_AUTO_UNIT_TEST(constant_string_regression_wchar_t)
+BOOST_AUTO_TEST_CASE(constant_string_regression_wchar_t)
 {
     std::srand(1);
     do_unit_test<wchar_t>();

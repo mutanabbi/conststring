@@ -11,6 +11,7 @@
 #define BOOST_CONST_STRING_FORMAT_HPP
 
 #include <stdarg.h>
+#include <cstdio>
 
 #include "boost/const_string/const_string.hpp"
 
@@ -91,18 +92,18 @@ inline ConstStringT cs_format_va(size_t hint, CharT const* fmt, va_list args)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline const_string<char> cs_format(char const* fmt, ...)
+inline basic_const_string<char> cs_format(char const* fmt, ...)
 {
-    typedef const_string<char> string;
+    typedef basic_const_string<char> string;
     va_list args; va_start(args, fmt);
     string r = cs_format_va<string, string::char_type>(0, fmt, args);
     va_end(args);
     return r;
 }
 
-inline const_string<char> cs_format(size_t hint, char const* fmt, ...)
+inline basic_const_string<char> cs_format(size_t hint, char const* fmt, ...)
 {
-    typedef const_string<char> string;
+    typedef basic_const_string<char> string;
     va_list args; va_start(args, fmt);
     string r = cs_format_va<string, string::char_type>(hint, fmt, args);
     va_end(args);
@@ -111,18 +112,18 @@ inline const_string<char> cs_format(size_t hint, char const* fmt, ...)
 
 #ifndef BOOST_NO_CWCHAR
 
-inline const_string<wchar_t> cs_format(wchar_t const* fmt, ...)
+inline basic_const_string<wchar_t> cs_format(wchar_t const* fmt, ...)
 {
-    typedef const_string<wchar_t> string;
+    typedef basic_const_string<wchar_t> string;
     va_list args; va_start(args, fmt);
     string const& r(cs_format_va<string, string::char_type>(0, fmt, args));
     va_end(args);
     return r;
 }
 
-inline const_string<wchar_t> cs_format(size_t hint, wchar_t const* fmt, ...)
+inline basic_const_string<wchar_t> cs_format(size_t hint, wchar_t const* fmt, ...)
 {
-    typedef const_string<wchar_t> string;
+    typedef basic_const_string<wchar_t> string;
     va_list args; va_start(args, fmt);
     string const& r(cs_format_va<string, string::char_type>(hint, fmt, args));
     va_end(args);

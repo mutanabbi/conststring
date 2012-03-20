@@ -33,7 +33,7 @@ namespace aux {
 // buffer will be aligned properly for boost::detail::atomic_count but
 // perhaps might not be aligned properly for char_type (or to whatever
 // buffer_alignment specifies).  Let me apply the James Kanze
-// test [*]: is it safe to create a const_string<double> on a SPARC?
+// test [*]: is it safe to create a basic_const_string<double> on a SPARC?
 //
 // [*] See <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=8670> if you
 //     don't know what I'm talking about.
@@ -112,7 +112,7 @@ public:
     const_string_storage(char_type const* begin, size_t length, int /*reference_semantics*/)
     {
         if (length > this->max_size())
-            throw std::length_error("const_string: the source string is way too long");
+            throw std::length_error("basic_const_string: the source string is way too long");
 
         state_ = length | shared_bit_mask;
         *this->as_shared() = begin;
@@ -121,7 +121,7 @@ public:
     const_string_storage(char_type const* begin, size_t length)
     {
         if (length > this->max_size())
-            throw std::length_error("const_string: the source string is way too long");
+            throw std::length_error("basic_const_string: the source string is way too long");
 
         state_ = length
             | allocated_bit_mask
@@ -189,7 +189,7 @@ public:
     const_string_storage& set_size(size_t length)
     {
         if (length > this->size())
-            throw std::length_error("const_string: the source string is way too long");
+            throw std::length_error("basic_const_string: the source string is way too long");
         state_ = state_ & (allocated_bit_mask | shared_bit_mask) | length;
         return *this;
     }

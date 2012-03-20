@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// const_string.hpp
+// basic_const_string.hpp
 
 // Copyright (c) 2004 Maxim Yegorushkin
 //
@@ -48,7 +48,7 @@ inline
 typename T::const_pointer checked_data(T const& t, typename T::size_type pos)
 {
     if (pos > t.size())
-        throw std::out_of_range("const_string");
+        throw std::out_of_range("basic_const_string");
     else
         return pos + t.data();
 }
@@ -59,7 +59,7 @@ typename T::size_type checked_size(T const& t, typename T::size_type pos, typena
 {
     typename T::size_type const size(t.size());
     if (pos > size)
-        throw std::out_of_range("const_string");
+        throw std::out_of_range("basic_const_string");
     else
         return std::min(n, size - pos);
 }
@@ -76,7 +76,7 @@ template<
     , class TraitsT
     , class StorageT
     >
-class const_string : private StorageT
+class basic_const_string : private StorageT
 {
 private:
     BOOST_STATIC_ASSERT(boost::is_pod<CharT>::value);
@@ -103,7 +103,7 @@ public:
     typedef std::basic_string<char_type, traits_type> std_string_type;
 
 public:
-    const_string() // throw(std::bad_alloc) only in case when sizeof(char_type) > sizeof(char_type*) and buffer_size is 0
+    basic_const_string() // throw(std::bad_alloc) only in case when sizeof(char_type) > sizeof(char_type*) and buffer_size is 0
         : storage_type(
               boost::cs::aux::zero_string_literal<char_type>::value
             , 0
@@ -111,23 +111,23 @@ public:
             )
     {}
 
-    explicit const_string(storage_type const& stg) // throw()
+    explicit basic_const_string(storage_type const& stg) // throw()
         : storage_type(stg)
     {}
 
-public: // const_string arg
-    const_string(const_string const& str, size_t pos, size_t n = npos) // throw(std::bad_alloc, std::out_of_range, std::length_error)
+public: // basic_const_string arg
+    basic_const_string(basic_const_string const& str, size_t pos, size_t n = npos) // throw(std::bad_alloc, std::out_of_range, std::length_error)
         : storage_type(
               cs::aux::checked_data(str, pos)
             , cs::aux::checked_size(str, pos, n)
             )
     {}
 
-    const_string(boost::reference_wrapper<const_string const> const& str) // throw()
+    basic_const_string(boost::reference_wrapper<basic_const_string const> const& str) // throw()
         : storage_type(str.get())
     {}
 
-    const_string(boost::reference_wrapper<const_string const> const& str, size_t pos, size_t n = npos) // throw(std::out_of_range, std::length_error)
+    basic_const_string(boost::reference_wrapper<basic_const_string const> const& str, size_t pos, size_t n = npos) // throw(std::out_of_range, std::length_error)
         : storage_type(
               cs::aux::checked_data(str.get(), pos)
             , cs::aux::checked_size(str.get(), pos, n)
@@ -135,27 +135,27 @@ public: // const_string arg
             )
     {}
 
-    const_string& operator=(const_string const& str) // throw()
+    basic_const_string& operator=(basic_const_string const& str) // throw()
     {
         this->storage_type::operator=(str);
         return *this;
     }
 
-    const_string& operator=(boost::reference_wrapper<const_string const> const& str) // throw()
+    basic_const_string& operator=(boost::reference_wrapper<basic_const_string const> const& str) // throw()
     {
         this->storage_type::operator=(str.get());
         return *this;
     }
 
 public: // std::basic_string<> arg
-    const_string(std_string_type const& str, size_t pos = 0, size_t n = npos) // throw(std::bad_alloc, std::out_of_range, std::length_error)
+    basic_const_string(std_string_type const& str, size_t pos = 0, size_t n = npos) // throw(std::bad_alloc, std::out_of_range, std::length_error)
         : storage_type(
               cs::aux::checked_data(str, pos)
             , cs::aux::checked_size(str, pos, n)
             )
     {}
 
-    const_string(boost::reference_wrapper<std_string_type const> const& str, size_t pos = 0, size_t n = npos) // throw(std::out_of_range, std::length_error)
+    basic_const_string(boost::reference_wrapper<std_string_type const> const& str, size_t pos = 0, size_t n = npos) // throw(std::out_of_range, std::length_error)
         : storage_type(
               cs::aux::checked_data(str.get(), pos)
             , cs::aux::checked_size(str.get(), pos, n)
@@ -164,14 +164,14 @@ public: // std::basic_string<> arg
     {}
 
 public: // char_type* arg
-    const_string(char_type const* s, size_t n = npos) // throw(std::bad_alloc, std::length_error)
+    basic_const_string(char_type const* s, size_t n = npos) // throw(std::bad_alloc, std::length_error)
         : storage_type(
               s
             , npos == n ? traits_type::length(s) : n
         )
     {}
 
-    const_string(boost::reference_wrapper<char_type const* const> s, size_t n = npos) // throw(std::length_error)
+    basic_const_string(boost::reference_wrapper<char_type const* const> s, size_t n = npos) // throw(std::length_error)
         : storage_type(
               s.get()
             , npos == n ? traits_type::length(s.get()) : n
@@ -179,7 +179,7 @@ public: // char_type* arg
         )
     {}
 
-    const_string(boost::reference_wrapper<char_type* const> s, size_t n = npos) // throw(std::length_error)
+    basic_const_string(boost::reference_wrapper<char_type* const> s, size_t n = npos) // throw(std::length_error)
         : storage_type(
               s.get()
             , npos == n ? traits_type::length(s.get()) : n
@@ -187,14 +187,14 @@ public: // char_type* arg
         )
     {}
 
-    const_string(char_type const* begin, char_type const* end) // throw(std::bad_alloc, std::length_error)
+    basic_const_string(char_type const* begin, char_type const* end) // throw(std::bad_alloc, std::length_error)
         : storage_type(
               begin
             , end - begin
         )
     {}
 
-    const_string(boost::reference_wrapper<char_type const* const> begin, char_type const* end) // throw(std::length_error)
+    basic_const_string(boost::reference_wrapper<char_type const* const> begin, char_type const* end) // throw(std::length_error)
         : storage_type(
               begin.get()
             , end - begin.get()
@@ -202,7 +202,7 @@ public: // char_type* arg
         )
     {}
 
-    const_string(boost::reference_wrapper<char_type* const> begin, char_type const* end) // throw(std::length_error)
+    basic_const_string(boost::reference_wrapper<char_type* const> begin, char_type const* end) // throw(std::length_error)
         : storage_type(
               begin.get()
             , end - begin.get()
@@ -212,7 +212,7 @@ public: // char_type* arg
 
 public: // char_type[] arg
     template<size_t N>
-    const_string(boost::reference_wrapper<char_type const[N]> const& s, size_t n = npos) // throw(std::length_error)
+    basic_const_string(boost::reference_wrapper<char_type const[N]> const& s, size_t n = npos) // throw(std::length_error)
         : storage_type(
               s.get()
             , npos == n ? traits_type::length(s.get()) : n
@@ -222,27 +222,27 @@ public: // char_type[] arg
 
 public: // other
     template<class IteratorT>
-    const_string(IteratorT begin, IteratorT end) // throw(std::bad_alloc, std::length_error)
+    basic_const_string(IteratorT begin, IteratorT end) // throw(std::bad_alloc, std::length_error)
         : storage_type(0, std::distance(begin, end))
     {
         std::copy(begin, end, const_cast<char_type*>(this->data()));
     }
 
-    const_string(size_t n, char_type c) // throw(std::bad_alloc, std::length_error)
+    basic_const_string(size_t n, char_type c) // throw(std::bad_alloc, std::length_error)
         : storage_type(0, n)
     {
         std::fill_n(const_cast<char_type*>(this->begin()), n, c);
     }
 
-    const_string& operator=(char_type c) // throw(std::bad_alloc)
+    basic_const_string& operator=(char_type c) // throw(std::bad_alloc)
     {
-        return *this = const_string(1, c);
+        return *this = basic_const_string(1, c);
     }
 
 
 public:
     template<class T, class U>
-    const_string(concatenation<const_string, T, U> const& expr) // throw(std::bad_alloc, std::length_error)
+    basic_const_string(concatenation<basic_const_string, T, U> const& expr) // throw(std::bad_alloc, std::length_error)
         : storage_type(0, expr.size())
     {
         expr.copy_result_to(const_cast<char_type*>(this->begin()));
@@ -285,7 +285,7 @@ public:
         // this condition yields true if this string was obtained via ref_substr()
         // and thus may not have the trailing zero
         if (char_type() != *this->end())
-            const_cast<const_string&>(*this) = const_string(this->begin(), this->end());
+            const_cast<basic_const_string&>(*this) = basic_const_string(this->begin(), this->end());
         return this->begin();
     }
 
@@ -307,25 +307,25 @@ public:
         return std_string_type(this->begin(), this->end());
     }
 
-    const_string substr(size_t pos = 0, size_t n = npos) const // throw(std::bad_alloc, std::out_of_range)
+    basic_const_string substr(size_t pos = 0, size_t n = npos) const // throw(std::bad_alloc, std::out_of_range)
     {
-        return const_string(*this, pos, n);
+        return basic_const_string(*this, pos, n);
     }
 
-    const_string ref_substr(size_t pos = 0, size_t n = npos) const // throw(std::out_of_range, std::length_error)
+    basic_const_string ref_substr(size_t pos = 0, size_t n = npos) const // throw(std::out_of_range, std::length_error)
     {
-        return const_string(boost::cref(*this), pos, n);
+        return basic_const_string(boost::cref(*this), pos, n);
     }
 
 public:
     void clear() // throw()
     {
-        *this = const_string();
+        *this = basic_const_string();
     }
 
-    void swap(const_string& other) // throw()
+    void swap(basic_const_string& other) // throw()
     {
-        const_string const t(*this);
+        basic_const_string const t(*this);
         *this = other;
         other = t;
     }
@@ -335,71 +335,71 @@ public:
     // provided for drop in compatibility with std::basic_string<> only
     // #include "boost/const_string/concatenation.hpp" to use them
 
-    const_string& operator+=(const_string const& str) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& operator+=(basic_const_string const& str) // throw(std::bad_alloc, std::length_error)
     {
         return *this = *this + str;
     }
 
-    const_string& operator+=(std_string_type const& str) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& operator+=(std_string_type const& str) // throw(std::bad_alloc, std::length_error)
     {
         return *this = *this + str;
     }
 
-    const_string& operator+=(char_type const* s) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& operator+=(char_type const* s) // throw(std::bad_alloc, std::length_error)
     {
         return *this = *this + s;
     }
 
-    const_string& operator+=(char_type c) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& operator+=(char_type c) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = *this + const_string(1, c);
+        return *this = *this + basic_const_string(1, c);
     }
 
-    const_string& append(const_string const& str) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(basic_const_string const& str) // throw(std::bad_alloc, std::length_error)
     {
         return *this = *this + str;
     }
 
-    const_string& append(const_string const& str, size_t pos, size_t n) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(basic_const_string const& str, size_t pos, size_t n) // throw(std::bad_alloc, std::length_error)
     {
         return *this = *this + str.ref_substr(pos, n);
     }
 
-    const_string& append(std_string_type const& str) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(std_string_type const& str) // throw(std::bad_alloc, std::length_error)
     {
         return *this = *this + str;
     }
 
-    const_string& append(std_string_type const& str, size_t pos, size_t n) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(std_string_type const& str, size_t pos, size_t n) // throw(std::bad_alloc, std::length_error)
     {
         char_type const* const data(str.data());
-        return *this = *this + const_string(boost::cref(data), pos, n);
+        return *this = *this + basic_const_string(boost::cref(data), pos, n);
     }
 
-    const_string& append(char_type const* s) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(char_type const* s) // throw(std::bad_alloc, std::length_error)
     {
         return *this = *this + s;
     }
 
-    const_string& append(char_type const* s, size_t n) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(char_type const* s, size_t n) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = *this + const_string(boost::cref(s), n);
+        return *this = *this + basic_const_string(boost::cref(s), n);
     }
 
-    const_string& append(char_type c, size_t n) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(char_type c, size_t n) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = *this + const_string(n, c);
+        return *this = *this + basic_const_string(n, c);
     }
 
-    const_string& append(char_type const* begin, char_type const* end) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(char_type const* begin, char_type const* end) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = *this + const_string(boost::cref(begin), end);
+        return *this = *this + basic_const_string(boost::cref(begin), end);
     }
 
     template<class IteratorT>
-    const_string& append(IteratorT begin, IteratorT end) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& append(IteratorT begin, IteratorT end) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = *this + const_string(begin, end);
+        return *this = *this + basic_const_string(begin, end);
     }
 
     void push_back(char_type c) // throw(std::bad_alloc, std::length_error)
@@ -408,49 +408,49 @@ public:
     }
 
 public: // assign
-    const_string& assign(const_string const& str) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& assign(basic_const_string const& str) // throw(std::bad_alloc, std::length_error)
     {
         return *this = str;
     }
 
-    const_string& assign(const_string const& str, size_t pos, size_t n) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& assign(basic_const_string const& str, size_t pos, size_t n) // throw(std::bad_alloc, std::length_error)
     {
         return *this = str.ref_substr(pos, n);
     }
 
-    const_string& assign(std_string_type const& str) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& assign(std_string_type const& str) // throw(std::bad_alloc, std::length_error)
     {
         return *this = str;
     }
 
-    const_string& assign(std_string_type const& str, size_t pos, size_t n) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& assign(std_string_type const& str, size_t pos, size_t n) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = const_string(str, pos, n);
+        return *this = basic_const_string(str, pos, n);
     }
 
-    const_string& assign(char_type const* s) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& assign(char_type const* s) // throw(std::bad_alloc, std::length_error)
     {
         return *this = s;
     }
 
-    const_string& assign(char_type const* s, size_t n) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& assign(char_type const* s, size_t n) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = const_string(s, n);
+        return *this = basic_const_string(s, n);
     }
 
-    const_string& assign(char_type c, size_t n) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& assign(char_type c, size_t n) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = const_string(n, c);
+        return *this = basic_const_string(n, c);
     }
 
     template<class IteratorT>
-    const_string& assign(IteratorT begin, IteratorT end) // throw(std::bad_alloc, std::length_error)
+    basic_const_string& assign(IteratorT begin, IteratorT end) // throw(std::bad_alloc, std::length_error)
     {
-        return *this = const_string(begin, end);
+        return *this = basic_const_string(begin, end);
     }
 
 public: // find
-    size_t find(const_string const& str, size_t pos = 0) const // throw()
+    size_t find(basic_const_string const& str, size_t pos = 0) const // throw()
     {
         size_t const this_size(this->size());
         size_t const str_size(str.size());
@@ -464,7 +464,7 @@ public: // find
         return npos;
     }
 
-    size_t rfind(const_string const& str, size_t pos = 0) const // throw()
+    size_t rfind(basic_const_string const& str, size_t pos = 0) const // throw()
     {
         size_t const this_size(this->size());
         size_t const str_size(str.size());
@@ -566,35 +566,35 @@ public: // find
 
     size_t find(char_type const* s, size_t pos, size_t n) const // throw(std::length_error)
     {
-        return this->find(const_string(boost::cref(s), n), pos);
+        return this->find(basic_const_string(boost::cref(s), n), pos);
     }
 
     size_t find(char_type const* s, size_t pos = 0) const // throw(std::length_error)
     {
-        return this->find(const_string(boost::cref(s)), pos);
+        return this->find(basic_const_string(boost::cref(s)), pos);
     }
 
     size_t find(char_type s, size_t pos = 0) const // throw()
     {
-        return this->find(const_string(boost::cref(&s), 1), pos);
+        return this->find(basic_const_string(boost::cref(&s), 1), pos);
     }
 
     size_t rfind(char_type const* s, size_t pos, size_t n) const // throw(std::length_error)
     {
-        return this->rfind(const_string(boost::cref(s), n), pos);
+        return this->rfind(basic_const_string(boost::cref(s), n), pos);
     }
 
     size_t rfind(char_type const* s, size_t pos = 0) const // throw(std::length_error)
     {
-        return this->rfind(const_string(boost::cref(s), pos));
+        return this->rfind(basic_const_string(boost::cref(s), pos));
     }
 
     size_t rfind(char_type s, size_t pos = 0) const // throw()
     {
-        return this->rfind(const_string(boost::cref(&s), 1), pos);
+        return this->rfind(basic_const_string(boost::cref(&s), 1), pos);
     }
 
-    size_t find_first_of(const_string const& str, size_t pos = 0) const // throw()
+    size_t find_first_of(basic_const_string const& str, size_t pos = 0) const // throw()
     {
         return this->find_first_of(str.data(), pos, str.size());
     }
@@ -609,7 +609,7 @@ public: // find
         return this->find(c, pos);
     }
 
-    size_t find_last_of(const_string const& str, size_t pos = npos) const // throw()
+    size_t find_last_of(basic_const_string const& str, size_t pos = npos) const // throw()
     {
         return this->find_last_of(str.data(), pos, str.size());
     }
@@ -624,7 +624,7 @@ public: // find
         return this->rfind(c, pos);
     }
 
-    size_t find_first_not_of(const_string const& str, size_t pos = 0) const // throw()
+    size_t find_first_not_of(basic_const_string const& str, size_t pos = 0) const // throw()
     {
         return this->find_first_not_of(str.data(), pos, str.size());
     }
@@ -634,7 +634,7 @@ public: // find
         return this->find_first_not_of(s, pos, traits_type::length(s));
     }
 
-    size_t find_last_not_of(const_string const& str, size_t pos = npos) const // throw()
+    size_t find_last_not_of(basic_const_string const& str, size_t pos = npos) const // throw()
     {
         return this->find_last_not_of(str.data(), pos, str.size());
     }
@@ -646,7 +646,7 @@ public: // find
 
 public: // compare
     template<class S>
-    int compare(const_string<char_type, traits_type, S> const& b) const // throw()
+    int compare(basic_const_string<char_type, traits_type, S> const& b) const // throw()
     {
         size_t const a_lenght(this->size());
         size_t const b_lenght(b.size());
@@ -658,7 +658,7 @@ public: // compare
     int compare(
           size_t pos1
         , size_t n1
-        , const_string<char_type, traits_type, S> const& str
+        , basic_const_string<char_type, traits_type, S> const& str
         ) const // throw(std::out_of_range, std::length_error)
     {
         return this->ref_substr(pos1, n1).compare(str);
@@ -668,7 +668,7 @@ public: // compare
     int compare(
           size_t pos1
         , size_t n1
-        , const_string<char_type, traits_type, S> const& str
+        , basic_const_string<char_type, traits_type, S> const& str
         , size_t pos2
         , size_t n2) const // throw(std::out_of_range, std::length_error)
     {
@@ -677,7 +677,7 @@ public: // compare
 
     int compare(char_type const* s) const // throw(std::length_error)
     {
-        return this->compare(const_string(boost::cref(s)));
+        return this->compare(basic_const_string(boost::cref(s)));
     }
 
     int compare(
@@ -686,19 +686,19 @@ public: // compare
         , char_type const* s
         , size_t n2 = npos) const // throw(std::length_error)
     {
-        return this->ref_substr(pos1, n1).compare(const_string(boost::cref(s), n2));
+        return this->ref_substr(pos1, n1).compare(basic_const_string(boost::cref(s), n2));
     }
 };
 
 template<class T1, class T2, class T3>
-size_t const boost::const_string<T1, T2, T3>::npos;
+size_t const boost::basic_const_string<T1, T2, T3>::npos;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 template<class CharT, size_t N>
-inline const_string<CharT> lit(CharT const(&literal)[N]) // throw()
+inline basic_const_string<CharT> lit(CharT const(&literal)[N]) // throw()
 {
-    return const_string<CharT>(boost::cref(literal), N - 1);
+    return basic_const_string<CharT>(boost::cref(literal), N - 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -707,8 +707,8 @@ inline const_string<CharT> lit(CharT const(&literal)[N]) // throw()
 template<class char_type, class traits_type, class S1, class S2> \
 inline \
 bool operator op( \
-      const_string<char_type, traits_type, S1> const& a \
-    , const_string<char_type, traits_type, S2> const& b \
+      basic_const_string<char_type, traits_type, S1> const& a \
+    , basic_const_string<char_type, traits_type, S2> const& b \
     ) \
 { \
     return a.compare(b) op 0; \
@@ -739,17 +739,17 @@ CONST_STRING_DEFINE_COMPARISON_B(cmp)
 
 #define CONST_STRING_DEFINE_COMPARISON_A(cmp) \
 template<class T1, class T2, class T3 CONST_STRING_CMP_TMPL_AGRS> \
-inline bool operator cmp(const_string<T1, T2, T3> const& a, CONST_STRING_CMP_ARG b) \
+inline bool operator cmp(basic_const_string<T1, T2, T3> const& a, CONST_STRING_CMP_ARG b) \
 { \
-    typedef const_string<T1, T2, T3> string; \
+    typedef basic_const_string<T1, T2, T3> string; \
     return a cmp string(boost::cref(b)); \
 }
 
 #define CONST_STRING_DEFINE_COMPARISON_B(cmp) \
 template<class T1, class T2, class T3 CONST_STRING_CMP_TMPL_AGRS> \
-inline bool operator cmp(CONST_STRING_CMP_ARG a, const_string<T1, T2, T3> const& b) \
+inline bool operator cmp(CONST_STRING_CMP_ARG a, basic_const_string<T1, T2, T3> const& b) \
 { \
-    typedef const_string<T1, T2, T3> string; \
+    typedef basic_const_string<T1, T2, T3> string; \
     return string(boost::cref(a)) cmp b; \
 }
 
